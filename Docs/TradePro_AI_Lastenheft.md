@@ -1,6 +1,6 @@
 # Lastenheft – Projekt „TradePro AI"
 
-**Version:** 0.3 (AT-Fassung, Desktop-MVP, Free-Tier-First)
+**Version:** 0.4 (AT-Fassung, Desktop-MVP, Free-Tier-First, Spike-Ready)
 **Status:** Konzeptphase
 **Sprache:** Deutsch
 **Steuerrechtlicher Geltungsbereich:** Österreich (AT)
@@ -158,7 +158,7 @@ Die KI bewertet jede Aktie in vier Dimensionen, jede mit Sub-Score 0–100 und B
 
 #### 3.11.3 Output – Signal-Karte pro Aktie
 Standardisiertes UI-Element mit:
-- **Gesamt-Score 0–100** + Ampel (🟢 ≥ 75 KAUFEN / 🟡 50–74 BEOBACHTEN / 🔴 < 50 MEIDEN).
+- **Gesamt-Score 0–100** + Ampel (🟢 ≥ **80** KAUFEN / 🟡 **60–79** BEOBACHTEN / 🔴 < 60 MEIDEN).
 - **Confidence-Score** der KI (z. B. „hoch" / „mittel" / „niedrig" basierend auf Datenqualität und Konsistenz der Säulen).
 - **Drei stärkste Bull-Punkte** und **drei stärkste Bear-Punkte** mit Quellen­zitat.
 - **Devil's-Advocate-Sektion:** explizit das Gegen-Szenario (verpflichtend gegen Confirmation Bias).
@@ -316,17 +316,21 @@ yfinance/Stooq sind für **Eigenbedarf** unproblematisch. Sobald die App veröff
 
 ## 7. Getroffene Entscheidungen & noch offene Punkte
 
-### 7.1 Entschieden (v0.3) ✓
+### 7.1 Entschieden ✓
 - [x] **Steuerrecht:** Österreich (AT) – KESt 27,5 %, gleitender Durchschnittspreis, kein Verlustvortrag.
 - [x] **Zielplattform:** Desktop zuerst (Tauri, Win/Mac/Linux). Mobile und Web vorerst Out-of-Scope.
 - [x] **Architektur:** Local-First. Cloud-Sync später optional als Opt-in.
 - [x] **Kosten:** MVP komplett mit Free-Tier-Quellen, später wahlweise Paid-Tier zuschaltbar.
-- [x] **Kern-Feature:** KI-Kaufsignal-Modul (§3.11) hat oberste Priorität – „neue Aktien analysieren und Kaufsignal ausgeben".
+- [x] **Kern-Feature:** KI-Kaufsignal-Modul (§3.11) hat oberste Priorität.
+- [x] **LLM-Strategie (v0.4):** **Dual-Provider** von Tag 1:
+  - **Cloud:** **Claude Haiku** (`claude-haiku-4-5-20251001`) für schnelle, qualitativ hochwertige Analysen.
+  - **Lokal:** **Gemma 3** via Ollama (Empfehlung: 12B oder 27B, je nach Hardware) für Daten­schutz / Null-Kosten-Mode.
+  - Im UI per Schalter umschaltbar; Architektur muss beide Pfade gleichwertig unterstützen.
+- [x] **Score-Schwellen:** 🟢 ≥ 80 KAUFEN, 🟡 60–79 BEOBACHTEN, 🔴 < 60 MEIDEN.
+- [x] **Auto-Discovery-Universum (MVP):** **ATX + S&P 500 Top-50**. Erweiterung später.
 
 ### 7.2 Noch zu klären
 - [ ] Single-User-App genügt? (Annahme: ja, da Eigenbedarf.)
-- [ ] **LLM-Provider** für den Start: Claude Haiku (~ 0,25 $/Mio Token), GPT-4o-mini, oder direkt Ollama lokal? → Empfehlung: **Cloud-LLM für MVP** (Qualität, einfacher Setup), **Ollama als Phase-3-Upgrade**.
-- [ ] **KI-Score-Schwellen:** Sind 75 / 50 die richtigen Grenzwerte für KAUFEN / BEOBACHTEN, oder strenger (80 / 60)?
-- [ ] **Aktien-Universum** für Auto-Discovery: nur ATX + S&P 500, oder breiter (MSCI World, NASDAQ, STOXX 600)?
 - [ ] **Cutoff** für historische Daten – 5 Jahre, 10 Jahre oder ab Depot-Eröffnung?
 - [ ] **Monetarisierung später** – privat bleiben, Open Source mit Pro-Tier, oder kommerziell?
+- [ ] **Gemma-3-Variante:** 4B (CPU/8 GB RAM), 12B (16 GB RAM), 27B (24 GB+ RAM, ideal mit GPU) – abhängig von deinem Rechner.
